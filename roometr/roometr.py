@@ -7,7 +7,9 @@ API_HOST = 'https://roometr.com/api/v1/'
 
 
 class Roometr:
-
+    """
+    The client for the rumetr.com internal database. Use it to update our data with your scraper.
+    """
     def __init__(self, auth_key: str, developer: str, api_host=API_HOST):
         self._last_checked_developer = None
         self._checked_complexes = set()
