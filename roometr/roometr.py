@@ -50,3 +50,11 @@ class Roometr:
     def check_developer(self):
         if self._last_checked_developer == self.developer:
             return True
+
+        try:
+            self.get('developers/%s/' % self.developer)
+        except exceptions.Roometr404Exception:
+            raise exceptions.RoometrDeveloperNotFound('Bad developer id — rumetr server does not know it. Is it correct?')
+
+        self._last_checked_developer = self.developer
+        return True

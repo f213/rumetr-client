@@ -1,8 +1,8 @@
-class RoometrException (Exception):
+class RoometrException (BaseException):
     pass
 
 
-class RoometrDeveloperNotFound(Exception):
+class RoometrDeveloperNotFound(RoometrException):
     pass
 
 
