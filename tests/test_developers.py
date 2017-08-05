@@ -16,6 +16,7 @@ class TestDeveloperChecking(TestCase):
         self.r.developer = '100500'
         m.get(self.TEST_URL.format(developer_id=100500), json={})
         assert self.r.check_developer()
+        assert self.r._last_checked_developer == '100500'  # last checked developer id is saved
 
     def test_developer_is_not_checked_for_the_second_time(self, *args):
         self.r.developer = self.r._last_checked_developer = 100500

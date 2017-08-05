@@ -10,6 +10,7 @@ class Roometr:
 
     def __init__(self, auth_key: str, developer: str, api_host=API_HOST):
         self._last_checked_developer = None
+        self._checked_complexes = set()
 
         self.api_host = api_host
         self.developer = developer
@@ -26,12 +27,18 @@ class Roometr:
         return (self.api_host + '/%s/' % endpoint).replace('//', '/').replace(':/', '://')
 
     def post(self, url: str, data: str, expected_status_code=202):
+        """
+        Do a POST request
+        """
         r = requests.post(self._format_url(url), data=data, headers=self.headers, timeout=TIMEOUT)
         self._check_response(r, expected_status_code)
 
         return r.json()
 
     def get(self, url):
+        """
+        Do a GET request
+        """
         r = requests.get(self._format_url(url), headers=self.headers, timeout=TIMEOUT)
         self._check_response(r, 200)
 
@@ -47,7 +54,10 @@ class Roometr:
         if response.status_code != expected_status_code:
             raise exceptions.RoometrBadServerResponseException('Got response code %d, expected %d' % (response.status_code, expected_status_code))
 
-    def check_developer(self):
+    def check_developer(self) -> bool:
+        """
+        Check if a given developer exists in the roometr database
+        """
         if self._last_checked_developer == self.developer:
             return True
 
@@ -58,3 +68,29 @@ class Roometr:
 
         self._last_checked_developer = self.developer
         return True
+
+    def check_complex(self, complex: str) -> bool:
+        """
+        Check if a given complex exists in the roometr database
+        """
+        self.check_developer()
+        if complex in self._checked_complexes:
+            return True
+
+        try:
+            self.get('developers/{developer}/complexes/{complex}'.format(
+                developer=self.developer,
+                complex=complex,
+            ))
+        except exceptions.Roometr404Exception:
+            raise exceptions.RoometrComplexNotFound('Unknown complex — maybe you should create one?')
+
+        self._checked_complexes.add(complex)
+        return True
+
+    def add_complex(self, **kwargs):
+        """
+        STUB YET! Add a complex to the rumetr db
+        """
+        self.check_developer()
+        self.post('developers/%s/complexes/' % self.developer, data=kwargs)
