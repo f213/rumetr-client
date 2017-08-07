@@ -10,6 +10,10 @@ class RoometrComplexNotFound(RoometrException):
     pass
 
 
+class RoometrHouseNotFound(RoometrException):
+    pass
+
+
 class Roometr404Exception(RoometrException):
     pass
 

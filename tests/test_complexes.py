@@ -8,7 +8,7 @@ from roometr import Roometr, exceptions
 
 @requests_mock.Mocker()
 @patch('roometr.Roometr.check_developer', return_value=True)
-class TestDeveloperChecking(TestCase):
+class TestComplexChecking(TestCase):
     TEST_URL = 'http://api.host.com/developers/dvlpr/complexes/{complex}/'
 
     def setUp(self):

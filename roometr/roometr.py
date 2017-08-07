@@ -13,6 +13,7 @@ class Roometr:
     def __init__(self, auth_key: str, developer: str, api_host=API_HOST):
         self._last_checked_developer = None
         self._checked_complexes = set()
+        self._checked_houses = set()
 
         self.api_host = api_host
         self.developer = developer
@@ -80,7 +81,7 @@ class Roometr:
             return True
 
         try:
-            self.get('developers/{developer}/complexes/{complex}'.format(
+            self.get('developers/{developer}/complexes/{complex}/'.format(
                 developer=self.developer,
                 complex=complex,
             ))
@@ -90,9 +91,33 @@ class Roometr:
         self._checked_complexes.add(complex)
         return True
 
+    def check_house(self, complex: str, house: str) -> bool:
+        """
+        Check if given house exists in the roometr database
+        """
+        self.check_complex(complex)
+        if house in self._checked_houses:
+            return True
+
+        try:
+            self.get('developers/{developer}/complexes/{complex}/houses/{house}/'.format(
+                developer=self.developer,
+                complex=complex,
+                house=house,
+            ))
+        except exceptions.Roometr404Exception:
+            raise exceptions.RoometrHouseNotFound('Unknown house (complex is known) — may be you should create one?')
+
+        self._checked_houses.add(house)
+        return True
+
     def add_complex(self, **kwargs):
         """
         STUB YET! Add a complex to the rumetr db
         """
         self.check_developer()
         self.post('developers/%s/complexes/' % self.developer, data=kwargs)
+
+    def add_house(self, complex: str, **kwargs):
+        self.check_complex(complex)
+        self.post('developers/{developer}/complexes/{complex}/houses/'.format(developer=self.developer, complex=complex), data=kwargs)
