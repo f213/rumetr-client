@@ -14,6 +14,10 @@ class RoometrHouseNotFound(RoometrException):
     pass
 
 
+class RoometrApptNotFound(RoometrException):
+    pass
+
+
 class Roometr404Exception(RoometrException):
     pass
 

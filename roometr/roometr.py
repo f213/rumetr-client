@@ -11,9 +11,7 @@ class Roometr:
     The client for the rumetr.com internal database. Use it to update our data with your scraper.
     """
     def __init__(self, auth_key: str, developer: str, api_host=API_HOST):
-        self._last_checked_developer = None
-        self._checked_complexes = set()
-        self._checked_houses = set()
+        self._initialize_cache()
 
         self.api_host = api_host
         self.developer = developer
@@ -22,6 +20,12 @@ class Roometr:
             'Content-Type': 'application/json',
             'Accept': 'application/json',
         }
+
+    def _initialize_cache(self):
+        self._last_checked_developer = None
+        self._checked_complexes = set()
+        self._checked_houses = set()
+        self._checked_appts = set()
 
     def _format_url(self, endpoint):
         """
@@ -111,6 +115,27 @@ class Roometr:
         self._checked_houses.add('%s__%s' % (complex, house))
         return True
 
+    def check_appt(self, complex: str, house: str, appt: str) -> bool:
+        """
+        Check if given appartment exists in the roometr database
+        """
+        self.check_house(complex, house)
+        if '%s__%s__%s' % (complex, house, appt) in self._checked_appts:
+            return True
+
+        try:
+            self.get('developers/{developer}/complexes/{complex}/houses/{house}/appts/{appt}'.format(
+                developer=self.developer,
+                complex=complex,
+                house=house,
+                appt=appt,
+            ))
+        except exceptions.Roometr404Exception:
+            raise exceptions.RoometrApptNotFound('Unknown appt (house is known) — may be you should create one?')
+
+        self._checked_appts.add('%s__%s__%s' % (complex, house, appt))
+        return True
+
     def add_complex(self, **kwargs):
         """
         STUB YET! Add a complex to the rumetr db
@@ -121,3 +146,11 @@ class Roometr:
     def add_house(self, complex: str, **kwargs):
         self.check_complex(complex)
         self.post('developers/{developer}/complexes/{complex}/houses/'.format(developer=self.developer, complex=complex), data=kwargs)
+
+    def add_appt(self, complex: str, house: str, **kwargs):
+        self.check_house(complex, house)
+        self.post('developers/{developer}/complexes/{complex}/houses/{house}/appts/'.format(
+            developer=self.developer,
+            complex=complex,
+            house=house,
+        ), data=kwargs)
