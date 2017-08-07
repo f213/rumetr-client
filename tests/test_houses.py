@@ -17,11 +17,11 @@ class TestHouseChecking(TestCase):
     def test_house_ok(self, m, house_checker):
         m.get(self.TEST_URL.format(house='100500'), json={})
         assert self.r.check_house('cmplx', 100500)
-        assert 100500 in self.r._checked_houses  # complex is saved in cached
+        assert 'cmplx__100500' in self.r._checked_houses  # complex is saved in cached
         assert house_checker.call_count == 1  # delopver has been checked either
 
     def test_house_is_not_checked_for_the_second_time(self, *args):
-        self.r._checked_houses = {100500}
+        self.r._checked_houses = {'cmplx__100500'}
         assert self.r.check_house('cmplx', 100500)  # should return True without a mock
 
     def test_house_fail(self, m, *args):

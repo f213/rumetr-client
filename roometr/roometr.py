@@ -96,7 +96,7 @@ class Roometr:
         Check if given house exists in the roometr database
         """
         self.check_complex(complex)
-        if house in self._checked_houses:
+        if '%s__%s' % (complex, house) in self._checked_houses:
             return True
 
         try:
@@ -108,7 +108,7 @@ class Roometr:
         except exceptions.Roometr404Exception:
             raise exceptions.RoometrHouseNotFound('Unknown house (complex is known) — may be you should create one?')
 
-        self._checked_houses.add(house)
+        self._checked_houses.add('%s__%s' % (complex, house))
         return True
 
     def add_complex(self, **kwargs):
