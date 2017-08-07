@@ -28,3 +28,11 @@ class TestComplexChecking(TestCase):
         m.get(self.TEST_URL.format(complex='100500'), status_code=404)
         with pytest.raises(exceptions.RoometrComplexNotFound):
             assert self.r.check_complex(100500)
+
+    def test_complex_exists_1(self, m, *args):
+        m.get(self.TEST_URL.format(complex='100500'), json={})
+        assert self.r.complex_exists(100500)
+
+    def test_complex_exists_2(self, m, *args):
+        m.get(self.TEST_URL.format(complex='100500'), json={}, status_code=404)
+        assert not self.r.complex_exists(100500)

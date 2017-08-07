@@ -10,6 +10,39 @@ class Roometr:
     """
     The client for the rumetr.com internal database. Use it to update our data with your scraper.
     """
+    def complex_exists(self, complex: str) -> bool:
+        """
+        Shortcut to check if complex exists in our database.
+        """
+        try:
+            self.check_complex(complex)
+        except exceptions.RoometrComplexNotFound:
+            return False
+
+        return True
+
+    def house_exists(self, complex: str, house: str) -> bool:
+        """
+        Shortcut to check if house exists in our database.
+        """
+        try:
+            self.check_house(complex, house)
+        except exceptions.RoometrHouseNotFound:
+            return False
+
+        return True
+
+    def appt_exists(self, complex: str, house: str, appt: str) -> bool:
+        """
+        Shortcut to check if appt exists in our database.
+        """
+        try:
+            self.check_appt(complex, house, appt)
+        except exceptions.RoometrApptNotFound:
+            return False
+
+        return True
+
     def __init__(self, auth_key: str, developer: str, api_host=API_HOST):
         self._initialize_cache()
 

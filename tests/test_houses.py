@@ -28,3 +28,11 @@ class TestHouseChecking(TestCase):
         m.get(self.TEST_URL.format(house='100500'), status_code=404)
         with pytest.raises(exceptions.RoometrHouseNotFound):
             assert self.r.check_house('cmplx', 100500)
+
+    def test_house_exists_1(self, m, *args):
+        m.get(self.TEST_URL.format(house='100500'), json={})
+        assert self.r.house_exists('cmplx', 100500)
+
+    def test_house_exists_2(self, m, *args):
+        m.get(self.TEST_URL.format(house='100500'), json={}, status_code=404)
+        assert not self.r.house_exists('cmplx', 100500)
