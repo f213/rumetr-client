@@ -6,7 +6,7 @@
 d=`pwd`
 dst=$1
 
-if [ -z $dst]; then
+if [ -z $dst ]; then
     echo "Usage: ${0} <destination env>"
     exit 127
 fi

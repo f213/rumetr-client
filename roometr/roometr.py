@@ -66,11 +66,12 @@ class Roometr:
         """
         return (self.api_host + '/%s/' % endpoint).replace('//', '/').replace(':/', '://')
 
-    def post(self, url: str, data: str, expected_status_code=202):
+    def post(self, url: str, data: str, expected_status_code=201):
         """
         Do a POST request
         """
-        r = requests.post(self._format_url(url), data=data, headers=self.headers, timeout=TIMEOUT)
+        print('posting', data, 'to', self._format_url(url))
+        r = requests.post(self._format_url(url), json=data, headers=self.headers, timeout=TIMEOUT)
         self._check_response(r, expected_status_code)
 
         return r.json()
@@ -92,7 +93,7 @@ class Roometr:
             raise exceptions.Roometr403Exception()
 
         if response.status_code != expected_status_code:
-            raise exceptions.RoometrBadServerResponseException('Got response code %d, expected %d' % (response.status_code, expected_status_code))
+            raise exceptions.RoometrBadServerResponseException('Got response code %d, expected %d, error: %s' % (response.status_code, expected_status_code, response.text))
 
     def check_developer(self) -> bool:
         """
