@@ -1,5 +1,6 @@
-from .roometr import Roometr
+from .roometr import Roometr, ApptList
 
 __all__ = [
     'Roometr',
+    'ApptList',
 ]

@@ -6,6 +6,30 @@ TIMEOUT = 3
 API_HOST = 'https://roometr.com/api/v1/'
 
 
+class ApptList(dict):
+    """
+    Abstract list of flats. Useful for working with a plain list of flats
+    """
+    def add(self, complex: str, house: str, id, **kwargs):
+        self._get_house(complex, house)
+        self[complex][house][id] = kwargs
+
+    def _get_complex(self, complex: str) -> dict:
+        try:
+            return self[complex]
+        except KeyError:
+            self[complex] = {}
+            return self[complex]
+
+    def _get_house(self, complex: str, house: str) -> dict:
+        self._get_complex(complex)
+        try:
+            return self[complex][house]
+        except KeyError:
+            self[complex][house] = {}
+            return self[complex][house]
+
+
 class Roometr:
     """
     The client for the rumetr.com internal database. Use it to update our data with your scraper.
@@ -75,7 +99,7 @@ class Roometr:
 
         return r.json()
 
-    def put(self, url: str, data: str, expected_status_code=202):
+    def put(self, url: str, data: str, expected_status_code=200):
         """
         Do a PUT request
         """
@@ -203,13 +227,14 @@ class Roometr:
             house=house,
         ), data=kwargs)
 
-    def update_appt(self, complex: str, house: str, **kwargs):
+    def update_appt(self, complex: str, house: str, id, **kwargs):
         """
         Update existing appartment
         """
         self.check_house(complex, house)
-        self.put('developers/{developer}/complexes/{complex}/houses/{house}/appts/'.format(
+        self.put('developers/{developer}/complexes/{complex}/houses/{house}/appts/{id}'.format(
             developer=self.developer,
             complex=complex,
             house=house,
+            id=id,
         ), data=kwargs)

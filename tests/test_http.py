@@ -27,7 +27,7 @@ class TestHTTPQueries(TestCase):
         assert self.r.get('test') == {'ok': True}
 
     def test_put(self, m):
-        m.put(self.TEST_URL, json={'ok': True}, status_code=202)
+        m.put(self.TEST_URL, json={'ok': True}, status_code=200)
         assert self.r.put('test', data={}) == {'ok': True}
 
     def test_bad_status_code(self, m):
