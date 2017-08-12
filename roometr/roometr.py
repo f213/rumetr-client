@@ -192,7 +192,7 @@ class Roometr:
         self.check_complex(complex)
         self.post('developers/{developer}/complexes/{complex}/houses/'.format(developer=self.developer, complex=complex), data=kwargs)
 
-    def add_appt(self, complex: str, house: str, external_id, **kwargs):
+    def add_appt(self, complex: str, house: str, **kwargs):
         """
         Add a new appartment to the rumetr db
         """
@@ -201,10 +201,9 @@ class Roometr:
             developer=self.developer,
             complex=complex,
             house=house,
-            external_id=external_id,
         ), data=kwargs)
 
-    def update_appt(self, complex: str, house: str, external_id, **kwargs):
+    def update_appt(self, complex: str, house: str, **kwargs):
         """
         Update existing appartment
         """
@@ -213,5 +212,4 @@ class Roometr:
             developer=self.developer,
             complex=complex,
             house=house,
-            external_id=external_id,
         ), data=kwargs)
