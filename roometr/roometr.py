@@ -70,8 +70,16 @@ class Roometr:
         """
         Do a POST request
         """
-        print('posting', data, 'to', self._format_url(url))
         r = requests.post(self._format_url(url), json=data, headers=self.headers, timeout=TIMEOUT)
+        self._check_response(r, expected_status_code)
+
+        return r.json()
+
+    def put(self, url: str, data: str, expected_status_code=202):
+        """
+        Do a PUT request
+        """
+        r = requests.put(self._format_url(url), json=data, headers=self.headers, timeout=TIMEOUT)
         self._check_response(r, expected_status_code)
 
         return r.json()
@@ -181,10 +189,11 @@ class Roometr:
         self.check_complex(complex)
         self.post('developers/{developer}/complexes/{complex}/houses/'.format(developer=self.developer, complex=complex), data=kwargs)
 
-    def add_appt(self, complex: str, house: str, **kwargs):
+    def add_appt(self, complex: str, house: str, external_id, **kwargs):
         self.check_house(complex, house)
         self.post('developers/{developer}/complexes/{complex}/houses/{house}/appts/'.format(
             developer=self.developer,
             complex=complex,
             house=house,
+            external_id=external_id,
         ), data=kwargs)

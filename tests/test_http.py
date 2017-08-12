@@ -19,12 +19,16 @@ class TestHTTPQueries(TestCase):
         assert self.r._format_url('sms/message') == 'http://api.host.com/sms/message/'
 
     def test_post(self, m):
-        m.post(self.TEST_URL, json={'ok': True}, status_code=202)
+        m.post(self.TEST_URL, json={'ok': True}, status_code=201)
         assert self.r.post('test', data={}) == {'ok': True}
 
     def test_get(self, m):
         m.get(self.TEST_URL, json={'ok': True})
         assert self.r.get('test') == {'ok': True}
+
+    def test_put(self, m):
+        m.put(self.TEST_URL, json={'ok': True}, status_code=202)
+        assert self.r.put('test', data={}) == {'ok': True}
 
     def test_bad_status_code(self, m):
         m.post(self.TEST_URL, json={'ok': True}, status_code=418)  # i am a teapot!
