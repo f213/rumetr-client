@@ -105,7 +105,7 @@ class Roometr:
 
     def check_developer(self) -> bool:
         """
-        Check if a given developer exists in the roometr database
+        Check if a given developer exists in the rumetr database
         """
         if self._last_checked_developer == self.developer:
             return True
@@ -120,7 +120,7 @@ class Roometr:
 
     def check_complex(self, complex: str) -> bool:
         """
-        Check if a given complex exists in the roometr database
+        Check if a given complex exists in the rumetr database
         """
         self.check_developer()
         if complex in self._checked_complexes:
@@ -139,7 +139,7 @@ class Roometr:
 
     def check_house(self, complex: str, house: str) -> bool:
         """
-        Check if given house exists in the roometr database
+        Check if given house exists in the rumetr database
         """
         self.check_complex(complex)
         if '%s__%s' % (complex, house) in self._checked_houses:
@@ -159,7 +159,7 @@ class Roometr:
 
     def check_appt(self, complex: str, house: str, appt: str) -> bool:
         """
-        Check if given appartment exists in the roometr database
+        Check if given appartment exists in the rumetr database
         """
         self.check_house(complex, house)
         if '%s__%s__%s' % (complex, house, appt) in self._checked_appts:
@@ -180,18 +180,36 @@ class Roometr:
 
     def add_complex(self, **kwargs):
         """
-        STUB YET! Add a complex to the rumetr db
+        Add a new complex to the rumetr db
         """
         self.check_developer()
         self.post('developers/%s/complexes/' % self.developer, data=kwargs)
 
     def add_house(self, complex: str, **kwargs):
+        """
+        Add a new house to the rumetr db
+        """
         self.check_complex(complex)
         self.post('developers/{developer}/complexes/{complex}/houses/'.format(developer=self.developer, complex=complex), data=kwargs)
 
     def add_appt(self, complex: str, house: str, external_id, **kwargs):
+        """
+        Add a new appartment to the rumetr db
+        """
         self.check_house(complex, house)
         self.post('developers/{developer}/complexes/{complex}/houses/{house}/appts/'.format(
+            developer=self.developer,
+            complex=complex,
+            house=house,
+            external_id=external_id,
+        ), data=kwargs)
+
+    def update_appt(self, complex: str, house: str, external_id, **kwargs):
+        """
+        Update existing appartment
+        """
+        self.check_house(complex, house)
+        self.put('developers/{developer}/complexes/{complex}/houses/{house}/appts/'.format(
             developer=self.developer,
             complex=complex,
             house=house,
