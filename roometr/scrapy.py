@@ -1,4 +1,6 @@
 from roometr import Roometr
+from roometr import exceptions
+import scrapy
 
 
 class UploadPipeline(object):
@@ -39,16 +41,15 @@ class UploadPipeline(object):
         appt = dict(
             complex=self.item['complex_id'],
             house=self.item['house_id'],
-            external_id=self.item['id'],
             floor=self.item['floor'],
             room_count=self.item['room_count'],
             square=self.item['square'],
             price=self.item['price'],
         )
-        if not self.c.appt_exists(self.item['complex_id'], self.item['house_id'], self.item['id']):
-            self.c.add_appt(**appt)
-        else:
-            self.c.update_appt(**appt)
+        try:
+            self.c.update_appt(id=self.item['id'], **appt)
+        except exceptions.Roometr404Exception:
+            self.c.add_appt(external_id=self.item['id'], **appt)
 
     @property
     def c(self):
@@ -78,3 +79,21 @@ class UploadPipeline(object):
 
     def _non_required_settings(self, *args) -> dict:
         return {setting.replace('RUMETR_', '').lower(): self.spider.settings[setting.upper()] for setting in args if setting in self.spider.settings.keys()}
+
+
+class ApptItem(scrapy.Item):
+    complex_name = scrapy.Field()
+    complex_id = scrapy.Field()
+    complex_url = scrapy.Field()
+
+    house_id = scrapy.Field()
+    house_name = scrapy.Field()
+    house_addr = scrapy.Field()
+    house_url = scrapy.Field()
+
+    id = scrapy.Field()
+    floor = scrapy.Field()
+    room_count = scrapy.Field()
+    square = scrapy.Field()
+    price = scrapy.Field()
+    is_studio = scrapy.Field()
