@@ -2,7 +2,7 @@ from unittest.case import TestCase
 
 import pytest
 import requests_mock
-from roometr import Roometr, exceptions
+from .. import Rumetr, exceptions
 
 
 @requests_mock.Mocker()
@@ -10,7 +10,7 @@ class TestDeveloperChecking(TestCase):
     TEST_URL = 'http://api.host.com/developers/{developer_id}/'
 
     def setUp(self):
-        self.r = Roometr('test', 'test', api_host='http://api.host.com')
+        self.r = Rumetr('test', 'test', api_host='http://api.host.com')
 
     def test_developer_is_ok(self, m):
         self.r.developer = '100500'
@@ -25,5 +25,5 @@ class TestDeveloperChecking(TestCase):
     def test_developer_is_not_found(self, m):
         self.r.developer = '100500'
         m.get(self.TEST_URL.format(developer_id=100500), status_code=404)
-        with pytest.raises(exceptions.RoometrDeveloperNotFound):
+        with pytest.raises(exceptions.RumetrDeveloperNotFound):
             self.r.check_developer()

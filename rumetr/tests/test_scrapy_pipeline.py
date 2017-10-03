@@ -1,5 +1,5 @@
 import pytest
-from roometr.scrapy import UploadPipeline
+from ..scrapy import UploadPipeline
 
 
 @pytest.fixture

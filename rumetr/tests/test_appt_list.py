@@ -1,5 +1,5 @@
 import pytest
-from roometr import ApptList
+from .. import ApptList
 
 
 @pytest.fixture

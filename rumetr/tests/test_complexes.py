@@ -3,16 +3,16 @@ from unittest.mock import patch
 
 import pytest
 import requests_mock
-from roometr import Roometr, exceptions
+from .. import Rumetr, exceptions
 
 
 @requests_mock.Mocker()
-@patch('roometr.Roometr.check_developer', return_value=True)
+@patch.object(Rumetr, 'check_developer', return_value=True)
 class TestComplexChecking(TestCase):
     TEST_URL = 'http://api.host.com/developers/dvlpr/complexes/{complex}/'
 
     def setUp(self):
-        self.r = Roometr('test', developer='dvlpr', api_host='http://api.host.com')
+        self.r = Rumetr('test', developer='dvlpr', api_host='http://api.host.com')
 
     def test_complex_ok(self, m, developer_checker):
         m.get(self.TEST_URL.format(complex='100500'), json={})
@@ -26,7 +26,7 @@ class TestComplexChecking(TestCase):
 
     def test_complex_fail(self, m, *args):
         m.get(self.TEST_URL.format(complex='100500'), status_code=404)
-        with pytest.raises(exceptions.RoometrComplexNotFound):
+        with pytest.raises(exceptions.RumetrComplexNotFound):
             assert self.r.check_complex(100500)
 
     def test_complex_exists_1(self, m, *args):

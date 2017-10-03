@@ -3,16 +3,16 @@ from unittest.mock import patch
 
 import pytest
 import requests_mock
-from roometr import Roometr, exceptions
+from .. import Rumetr, exceptions
 
 
 @requests_mock.Mocker()
-@patch('roometr.Roometr.check_complex', return_value=True)
+@patch.object(Rumetr, 'check_complex', return_value=True)
 class TestHouseChecking(TestCase):
     TEST_URL = 'http://api.host.com/developers/dvlpr/complexes/cmplx/houses/{house}/'
 
     def setUp(self):
-        self.r = Roometr('test', developer='dvlpr', api_host='http://api.host.com')
+        self.r = Rumetr('test', developer='dvlpr', api_host='http://api.host.com')
 
     def test_house_ok(self, m, house_checker):
         m.get(self.TEST_URL.format(house='100500'), json={})
@@ -26,7 +26,7 @@ class TestHouseChecking(TestCase):
 
     def test_house_fail(self, m, *args):
         m.get(self.TEST_URL.format(house='100500'), status_code=404)
-        with pytest.raises(exceptions.RoometrHouseNotFound):
+        with pytest.raises(exceptions.RumetrHouseNotFound):
             assert self.r.check_house('cmplx', 100500)
 
     def test_house_exists_1(self, m, *args):

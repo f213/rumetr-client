@@ -2,7 +2,7 @@ from unittest.case import TestCase
 
 import pytest
 import requests_mock
-from roometr import Roometr, exceptions
+from .. import Rumetr, exceptions
 
 
 @requests_mock.Mocker()
@@ -11,7 +11,7 @@ class TestHTTPQueries(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.r = Roometr('test', 'test', api_host='http://api.host.com')
+        cls.r = Rumetr('test', 'test', api_host='http://api.host.com')
 
     def test_format_url(self, *args):
         assert self.r._format_url('sms') == 'http://api.host.com/sms/'
@@ -32,15 +32,15 @@ class TestHTTPQueries(TestCase):
 
     def test_bad_status_code(self, m):
         m.post(self.TEST_URL, json={'ok': True}, status_code=418)  # i am a teapot!
-        with pytest.raises(exceptions.RoometrBadServerResponseException):
+        with pytest.raises(exceptions.RumetrBadServerResponseException):
             self.r.post('test', data={})
 
     def test_403(self, m):
         m.post(self.TEST_URL, json={'ok': True}, status_code=403)
-        with pytest.raises(exceptions.Roometr403Exception):
+        with pytest.raises(exceptions.Rumetr403Exception):
             self.r.post('test', data={})
 
     def test_404(self, m):
         m.post(self.TEST_URL, json={'ok': True}, status_code=404)
-        with pytest.raises(exceptions.Roometr404Exception):
+        with pytest.raises(exceptions.Rumetr404Exception):
             self.r.post('test', data={})

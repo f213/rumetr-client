@@ -3,7 +3,7 @@ import requests
 from . import exceptions
 
 TIMEOUT = 3
-API_HOST = 'https://roometr.com/api/v1/'
+API_HOST = 'https://rumetr.com/api/v1/'
 
 
 class ApptList(dict):
@@ -30,7 +30,7 @@ class ApptList(dict):
             return self[complex][house]
 
 
-class Roometr:
+class Rumetr:
     """
     The client for the rumetr.com internal database. Use it to update our data with your scraper.
     """
@@ -40,7 +40,7 @@ class Roometr:
         """
         try:
             self.check_complex(complex)
-        except exceptions.RoometrComplexNotFound:
+        except exceptions.RumetrComplexNotFound:
             return False
 
         return True
@@ -51,7 +51,7 @@ class Roometr:
         """
         try:
             self.check_house(complex, house)
-        except exceptions.RoometrHouseNotFound:
+        except exceptions.RumetrHouseNotFound:
             return False
 
         return True
@@ -62,7 +62,7 @@ class Roometr:
         """
         try:
             self.check_appt(complex, house, appt)
-        except exceptions.RoometrApptNotFound:
+        except exceptions.RumetrApptNotFound:
             return False
 
         return True
@@ -119,13 +119,13 @@ class Roometr:
 
     def _check_response(self, response, expected_status_code):
         if response.status_code == 404:
-            raise exceptions.Roometr404Exception()
+            raise exceptions.Rumetr404Exception()
 
         if response.status_code == 403:
-            raise exceptions.Roometr403Exception()
+            raise exceptions.Rumetr403Exception()
 
         if response.status_code != expected_status_code:
-            raise exceptions.RoometrBadServerResponseException('Got response code %d, expected %d, error: %s' % (response.status_code, expected_status_code, response.text))
+            raise exceptions.RumetrBadServerResponseException('Got response code %d, expected %d, error: %s' % (response.status_code, expected_status_code, response.text))
 
     def check_developer(self) -> bool:
         """
@@ -136,8 +136,8 @@ class Roometr:
 
         try:
             self.get('developers/%s/' % self.developer)
-        except exceptions.Roometr404Exception:
-            raise exceptions.RoometrDeveloperNotFound('Bad developer id — rumetr server does not know it. Is it correct?')
+        except exceptions.Rumetr404Exception:
+            raise exceptions.RumetrDeveloperNotFound('Bad developer id — rumetr server does not know it. Is it correct?')
 
         self._last_checked_developer = self.developer
         return True
@@ -155,8 +155,8 @@ class Roometr:
                 developer=self.developer,
                 complex=complex,
             ))
-        except exceptions.Roometr404Exception:
-            raise exceptions.RoometrComplexNotFound('Unknown complex — maybe you should create one?')
+        except exceptions.Rumetr404Exception:
+            raise exceptions.RumetrComplexNotFound('Unknown complex — maybe you should create one?')
 
         self._checked_complexes.add(complex)
         return True
@@ -175,8 +175,8 @@ class Roometr:
                 complex=complex,
                 house=house,
             ))
-        except exceptions.Roometr404Exception:
-            raise exceptions.RoometrHouseNotFound('Unknown house (complex is known) — may be you should create one?')
+        except exceptions.Rumetr404Exception:
+            raise exceptions.RumetrHouseNotFound('Unknown house (complex is known) — may be you should create one?')
 
         self._checked_houses.add('%s__%s' % (complex, house))
         return True
@@ -196,8 +196,8 @@ class Roometr:
                 house=house,
                 appt=appt,
             ))
-        except exceptions.Roometr404Exception:
-            raise exceptions.RoometrApptNotFound('Unknown appt (house is known) — may be you should create one?')
+        except exceptions.Rumetr404Exception:
+            raise exceptions.RumetrApptNotFound('Unknown appt (house is known) — may be you should create one?')
 
         self._checked_appts.add('%s__%s__%s' % (complex, house, appt))
         return True

@@ -1,5 +1,5 @@
-from roometr import Roometr
-from roometr import exceptions
+from rumetr import Rumetr
+from rumetr import exceptions
 import scrapy
 
 
@@ -48,7 +48,7 @@ class UploadPipeline(object):
         )
         try:
             self.c.update_appt(id=self.item['id'], **appt)
-        except exceptions.Roometr404Exception:
+        except exceptions.Rumetr404Exception:
             self.c.add_appt(external_id=self.item['id'], **appt)
 
     @property
@@ -58,7 +58,7 @@ class UploadPipeline(object):
         """
         if self._client is None:
             self._parse_settings()
-            self._client = Roometr(**self.settings)
+            self._client = Rumetr(**self.settings)
         return self._client
 
     def _parse_settings(self):
