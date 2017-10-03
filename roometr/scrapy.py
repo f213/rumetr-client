@@ -16,26 +16,26 @@ class UploadPipeline(object):
 
     def add_complex_if_required(self):
         if not self.c.complex_exists(self.item['complex_id']):
-            self.c.add_complex(
+            complex = dict(
                 external_id=self.item['complex_id'],
                 name=self.item['complex_name'],
                 url=self.item.get('complex_url'),
             )
+            if self.item['addr'] is not None and len(self.item['addr']):
+                complex['address'] = {
+                    'value': self.item['addr'],
+                }
+
+            self.c.add_complex(**complex)
 
     def add_house_if_required(self):
         if not self.c.house_exists(self.item['complex_id'], self.item['house_id']):
-            house = dict(
+            self.c.add_house(
                 complex=self.item['complex_id'],
                 external_id=self.item['house_id'],
                 name=self.item['house_name'],
                 url=self.item.get('house_url'),
             )
-            if self.item['house_addr'] is not None and len(self.item['house_addr']):
-                house['address'] = {
-                    'value': self.item['house_addr'],
-                }
-
-            self.c.add_house(**house)
 
     def update_appt(self):
         appt = dict(
@@ -85,10 +85,10 @@ class ApptItem(scrapy.Item):
     complex_name = scrapy.Field()
     complex_id = scrapy.Field()
     complex_url = scrapy.Field()
+    addr = scrapy.Field()
 
     house_id = scrapy.Field()
     house_name = scrapy.Field()
-    house_addr = scrapy.Field()
     house_url = scrapy.Field()
 
     id = scrapy.Field()
