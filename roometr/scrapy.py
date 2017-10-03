@@ -19,7 +19,7 @@ class UploadPipeline(object):
             self.c.add_complex(
                 external_id=self.item['complex_id'],
                 name=self.item['complex_name'],
-                url=self.item['complex_url'],
+                url=self.item.get('complex_url'),
             )
 
     def add_house_if_required(self):
@@ -28,7 +28,7 @@ class UploadPipeline(object):
                 complex=self.item['complex_id'],
                 external_id=self.item['house_id'],
                 name=self.item['house_name'],
-                url=self.item['house_url'],
+                url=self.item.get('house_url'),
             )
             if self.item['house_addr'] is not None and len(self.item['house_addr']):
                 house['address'] = {
