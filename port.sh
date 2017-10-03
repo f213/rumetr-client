@@ -14,12 +14,13 @@ fi
 . venv/bin/activate
 /bin/rm -Rf dist
 python setup.py sdist
-/bin/cp dist/roometr-client-*.tar.gz /tmp/
+/bin/cp dist/rumetr-client-*.tar.gz /tmp/
 . $dst/venv/bin/activate
 echo Y|pip uninstall roometr-client
+echo Y|pip uninstall rumetr-client
 cd /tmp
-/usr/bin/tar zxpvf roometr-client-*.tar.gz
-cd roometr-client-*
+/usr/bin/tar zxpvf rumetr-client-*.tar.gz
+cd rumetr-client-*
 easy_install .
 
 cd $d
