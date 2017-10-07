@@ -1,5 +1,8 @@
 # rumetr-client
 
+[![Build Status](https://travis-ci.org/f213/rumetr-client.svg?branch=master)](https://travis-ci.org/f213/rumetr-client)
+[![codecov](https://codecov.io/gh/f213/rumetr-client/branch/master/graph/badge.svg)](https://codecov.io/gh/f213/rumetr-client)
+
 Python client and scrapy workflow for rumetr.com API.
 
 ## Usage
