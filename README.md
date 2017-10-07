@@ -23,9 +23,14 @@ RUMETR_DEVELOPER = '<PARTICULAR DEVELOPER CODE>'
 
 ```
 
-With this settings you parser should return our pre-formatted item:
+Now your parser should yield our pre-formatted
+item per each found appartment:
+
 ```python
 # developer/developerspider.py
+
+from rumetr.scrapy import ApptItem as Item
+
 def your_scrapy_callback(response):
 
       for appt in response.css('.your-appt[selector]):
