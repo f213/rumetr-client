@@ -45,7 +45,9 @@ class UploadPipeline(object):
             room_count=self.item['room_count'],
             square=self.item['square'],
             price=self.item['price'],
+            is_studio=self.item['is_studio'],
         )
+        
         try:
             self.c.update_appt(id=self.item['id'], **appt)
         except exceptions.Rumetr404Exception:
