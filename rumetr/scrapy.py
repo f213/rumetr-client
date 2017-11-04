@@ -46,8 +46,9 @@ class UploadPipeline(object):
             square=self.item['square'],
             price=self.item['price'],
             is_studio=self.item['is_studio'],
+            plan_url=self.item.get('plan_url'),
         )
-        
+
         try:
             self.c.update_appt(id=self.item['id'], **appt)
         except exceptions.Rumetr404Exception:
@@ -99,3 +100,4 @@ class ApptItem(scrapy.Item):
     square = scrapy.Field()
     price = scrapy.Field()
     is_studio = scrapy.Field()
+    plan_url = scrapy.Field()
