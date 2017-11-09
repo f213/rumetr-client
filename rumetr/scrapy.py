@@ -21,7 +21,7 @@ class UploadPipeline(object):
                 name=self.item['complex_name'],
                 url=self.item.get('complex_url'),
             )
-            if self.item['addr'] is not None and len(self.item['addr']):
+            if self.item.get('addr') is not None and len(self.item['addr']):
                 complex['address'] = {
                     'value': self.item['addr'],
                 }
