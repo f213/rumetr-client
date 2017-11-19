@@ -45,7 +45,7 @@ class UploadPipeline(object):
             room_count=self.item['room_count'],
             square=self.item['square'],
             price=self.item['price'],
-            is_studio=self.item['is_studio'],
+            is_studio=self.item.get('is_studio', False),
             plan_url=self.item.get('plan_url'),
         )
 
