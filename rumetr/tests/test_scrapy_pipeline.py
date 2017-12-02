@@ -1,4 +1,5 @@
 import pytest
+
 from ..scrapy import UploadPipeline
 
 

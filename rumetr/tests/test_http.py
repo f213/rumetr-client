@@ -2,6 +2,7 @@ from unittest.case import TestCase
 
 import pytest
 import requests_mock
+
 from .. import Rumetr, exceptions
 
 
