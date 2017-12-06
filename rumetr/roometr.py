@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 import requests
 
 from . import exceptions
@@ -127,6 +129,11 @@ class Rumetr:
         if response.status_code != expected_status_code:
             raise exceptions.RumetrBadServerResponseException('Got response code %d, expected %d, error: %s' % (response.status_code, expected_status_code, response.text))
 
+    @staticmethod
+    def _format_decimal(decimal: str) -> str:
+        rounded = Decimal(decimal).quantize(Decimal('0.01'))
+        return str(rounded)
+
     def check_developer(self) -> bool:
         """
         Check if a given developer exists in the rumetr database
@@ -216,25 +223,34 @@ class Rumetr:
         self.check_complex(complex)
         self.post('developers/{developer}/complexes/{complex}/houses/'.format(developer=self.developer, complex=complex), data=kwargs)
 
-    def add_appt(self, complex: str, house: str, **kwargs):
+    def add_appt(self, complex: str, house: str, price: str, square: str, **kwargs):
         """
         Add a new appartment to the rumetr db
         """
         self.check_house(complex, house)
+
+        kwargs['price'] = self._format_decimal(price)
+        kwargs['square'] = self._format_decimal(square)
+
         self.post('developers/{developer}/complexes/{complex}/houses/{house}/appts/'.format(
             developer=self.developer,
             complex=complex,
             house=house,
         ), data=kwargs)
 
-    def update_appt(self, complex: str, house: str, id, **kwargs):
+    def update_appt(self, complex: str, house: str, price: str, square: str, id: str, **kwargs):
         """
         Update existing appartment
         """
         self.check_house(complex, house)
+
+        kwargs['price'] = self._format_decimal(price)
+        kwargs['square'] = self._format_decimal(square)
+
         self.put('developers/{developer}/complexes/{complex}/houses/{house}/appts/{id}'.format(
             developer=self.developer,
             complex=complex,
             house=house,
             id=id,
+            price=self._format_decimal(price),
         ), data=kwargs)
