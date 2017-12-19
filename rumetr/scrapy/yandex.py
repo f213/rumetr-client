@@ -21,7 +21,7 @@ class YandexFeedSpider(XMLFeedSpider):
             price=node.xpath('yandex:price/yandex:value/text()')[0].extract(),
             house_id=self.get_house_id(node),
             house_name=self.get_house_id(node),
-            complex_id=node.xpath('yandex:yandex-building-id/text()')[0].extract(),
+            complex_id=self.get_complex_id(node),
             complex_name=node.xpath('yandex:building-name/text()')[0].extract(),
             complex_url=node.xpath('yandex:url/text()')[0].extract(),
             floor=node.xpath('yandex:floor/text()')[0].extract(),
@@ -43,7 +43,10 @@ class YandexFeedSpider(XMLFeedSpider):
             return False
 
     def build_address(self, node):
-        location = node.xpath('yandex:location/yandex:region/text()')[0].extract()
+        try:
+            location = node.xpath('yandex:location/yandex:region/text()')[0].extract()
+        except IndexError:
+            location = None
         city = node.xpath('yandex:location/yandex:locality-name/text()')[0].extract()
         addr = node.xpath('yandex:location/yandex:address/text()')[0].extract()
 
@@ -54,6 +57,12 @@ class YandexFeedSpider(XMLFeedSpider):
             return node.xpath('yandex:building-section/text()')[0].extract(),
         except IndexError:
             return node.xpath('yandex:building-name/text()')[0].extract()
+
+    def get_complex_id(self, node):
+        try:
+            return node.xpath('yandex:yandex-building-id/text()')[0].extract()
+        except IndexError:
+            return self._hash(node.xpath('yandex:building-name/text()')[0].extract())
 
     def _hash(self, input):
         return hashlib.md5(input.encode('utf-8')).hexdigest()
