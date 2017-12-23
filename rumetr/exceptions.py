@@ -28,3 +28,7 @@ class Rumetr403Exception(RumetrException):
 
 class RumetrBadServerResponseException(RumetrException):
     pass
+
+
+class RumetrUnparsableDeadline(RumetrException):
+    pass
