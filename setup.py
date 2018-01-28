@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='rumetr-client',
-    version='0.0.8',
+    version='0.0.9',
     description="Client for rumetr.com API",
     keywords=[],
     url="https://github.com/f213/rumetr-client/",

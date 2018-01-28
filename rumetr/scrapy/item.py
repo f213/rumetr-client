@@ -10,6 +10,7 @@ class ApptItem(scrapy.Item):
     house_id = scrapy.Field()
     house_name = scrapy.Field()
     house_url = scrapy.Field()
+    house_deadline = scrapy.Field()
 
     id = scrapy.Field()
     floor = scrapy.Field()
