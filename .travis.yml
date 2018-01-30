@@ -7,3 +7,10 @@ python:
 script: py.test --cov=./
 after_success:
       - bash <(curl -s https://codecov.io/bash)
+
+deploy:
+  provider: pypi
+  user: $PyPiLogin
+  password: $PyPiPassword
+  on:
+    tags: true
