@@ -28,18 +28,24 @@ class UploadPipeline(object):
             self.c.add_complex(**complex)
 
     def add_house_if_required(self):
+        house = dict(
+            complex=self.item['complex_id'],
+            external_id=self.item['house_id'],
+            name=self.item['house_name'],
+            url=self.item.get('house_url'),
+        )
+
+        if self.item.get('house_deadline') is not None:
+            house['deadline'] = self._parse_deadline(self.item['house_deadline'])
+
         if not self.c.house_exists(self.item['complex_id'], self.item['house_id']):
-            house = dict(
-                complex=self.item['complex_id'],
-                external_id=self.item['house_id'],
-                name=self.item['house_name'],
-                url=self.item.get('house_url'),
-            )
-
-            if self.item.get('house_deadline') is not None:
-                house['deadline'] = self._parse_deadline(self.item['house_deadline'])
-
             self.c.add_house(**house)
+        elif self.item.get('house_deadline') is not None:  # if the deadline has been changed — update the existing deadline in the database
+            self.c.update_house(
+                complex=self.item['complex_id'],
+                id=self.item['house_id'],
+                deadline=self._parse_deadline(self.item['house_deadline']),
+            )
 
     def update_appt(self):
         appt = dict(

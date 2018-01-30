@@ -238,6 +238,17 @@ class Rumetr:
             house=house,
         ), data=kwargs)
 
+    def update_house(self, complex: str, id: str, **kwargs):
+        """
+        Update the existing house
+        """
+        self.check_house(complex, id)
+        self.put('developers/{developer}/complexes/{complex}/houses/{id}'.format(
+            developer=self.developer,
+            complex=complex,
+            id=id,
+        ), data=kwargs)
+
     def update_appt(self, complex: str, house: str, price: str, square: str, id: str, **kwargs):
         """
         Update existing appartment
