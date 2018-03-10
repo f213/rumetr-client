@@ -20,11 +20,15 @@ class UploadPipeline(object):
                 name=self.item['complex_name'],
                 url=self.item.get('complex_url'),
             )
+
             if self.item.get('addr') is not None and len(self.item['addr']):
                 complex['address'] = {
                     'value': self.item['addr'],
                 }
-
+            
+            if self.item.get('complex_wall_type') is not None and len(self.item['complex_wall_type']):
+                complex['wall_type'] = self.item['complex_wall_type']
+            
             self.c.add_complex(**complex)
 
     def add_house_if_required(self):
@@ -37,6 +41,9 @@ class UploadPipeline(object):
 
         if self.item.get('house_deadline') is not None:
             house['deadline'] = self._parse_deadline(self.item['house_deadline'])
+
+        if self.item.get('house_max_floor') is not None:
+            house['max_floor'] = self.item['house_max_floor']
 
         if not self.c.house_exists(self.item['complex_id'], self.item['house_id']):
             self.c.add_house(**house)
@@ -58,6 +65,12 @@ class UploadPipeline(object):
             is_studio=self.item.get('is_studio', False),
             plan_url=self.item.get('plan_url'),
         )
+
+        if self.item.get('is_appartment') is not None:
+            appt['is_appartment'] = bool(self.item['is_appartment'])
+
+        if self.item.get('has_finishing') is not None:
+            appt['is_finishing'] = bool(self.item['is_finishing'])
 
         try:
             self.c.update_appt(id=self.item['id'], **appt)
