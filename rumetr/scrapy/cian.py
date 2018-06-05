@@ -10,9 +10,7 @@ class CianFeedSpider(XMLFeedSpider):
     complex_names = dict()
 
     def parse_node(self, response, node):
-        item = dict()
-
-        item.update(dict(
+        yield Item(
             complex_id=node.xpath('residential_complex/@id')[0].extract(),
             complex_name=self.get_complex_name_by_id(node.xpath('residential_complex/@id')[0].extract()),
             addr= self.get_address(node),
@@ -25,14 +23,7 @@ class CianFeedSpider(XMLFeedSpider):
             room_count=node.xpath('rooms_num/text()')[0].extract(),
             square=node.xpath('area/@total')[0].extract(),
             price=node.xpath('price/text()')[0].extract(),
-        ))
-
-        item = self.append_feed_data(node, item)
-
-        yield Item(**item)
-
-    def append_feed_data(self, node, item):
-        return item
+        )
 
     def get_address(self, node):
         city = node.xpath('address/@locality')[0].extract()
@@ -42,7 +33,7 @@ class CianFeedSpider(XMLFeedSpider):
 
     def get_complex_name_by_id(self, complex_id):
         try:
-            return self.complex_names.get(complex_id)
-        except:
-            return ''
-
+            return self.complex_names[complex_id]
+        except KeyError:
+            raise Exception('There is no complex_name in dictionary which matches id {}'.format(complex_id))
+    
