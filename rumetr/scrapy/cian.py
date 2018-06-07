@@ -1,4 +1,5 @@
 from scrapy.spiders import XMLFeedSpider
+from rumetr.scrapy import ApptItem as Item
 
 
 class CianFeedSpider(XMLFeedSpider):
