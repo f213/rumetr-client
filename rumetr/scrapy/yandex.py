@@ -54,7 +54,7 @@ class YandexFeedSpider(XMLFeedSpider):
 
     def get_house_id(self, node):
         try:
-            return node.xpath('yandex:building-section/text()')[0].extract(),
+            return node.xpath('yandex:building-section/text()')[0].extract()
         except IndexError:
             return node.xpath('yandex:building-name/text()')[0].extract()
 
