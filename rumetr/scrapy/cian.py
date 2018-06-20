@@ -1,4 +1,5 @@
 from scrapy.spiders import XMLFeedSpider
+
 from rumetr.scrapy import ApptItem as Item
 
 
@@ -37,4 +38,3 @@ class CianFeedSpider(XMLFeedSpider):
             return self.complex_names[complex_id]
         except KeyError:
             raise Exception('There is no complex_name in dictionary which matches id {}'.format(complex_id))
-    

@@ -1,7 +1,7 @@
 import pytest
 
-from ..scrapy import UploadPipeline
 from .. import exceptions
+from ..scrapy import UploadPipeline
 
 
 @pytest.fixture
