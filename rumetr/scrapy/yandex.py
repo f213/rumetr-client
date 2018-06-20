@@ -1,7 +1,9 @@
 import hashlib
+import re
+
+from scrapy.spiders import XMLFeedSpider
 
 from rumetr.scrapy.item import ApptItem as Item
-from scrapy.spiders import XMLFeedSpider
 
 
 class YandexFeedSpider(XMLFeedSpider):
@@ -15,9 +17,9 @@ class YandexFeedSpider(XMLFeedSpider):
         item = dict()
 
         item.update(dict(
-            id=node.xpath('@internal-id')[0].extract(),
+            id=self.get_internal_id(node),
+            square=self.get_square(node),
             room_count=node.xpath('yandex:rooms/text()')[0].extract(),
-            square=node.xpath('yandex:area/yandex:value/text()')[0].extract(),
             price=node.xpath('yandex:price/yandex:value/text()')[0].extract(),
             house_id=self.get_house_id(node),
             house_name=self.get_house_id(node),
@@ -51,6 +53,14 @@ class YandexFeedSpider(XMLFeedSpider):
         addr = node.xpath('yandex:location/yandex:address/text()')[0].extract()
 
         return ', '.join(x for x in [location, city, addr] if x is not None and len(x))
+
+    def get_internal_id(self, node):
+        id = node.xpath('@internal-id')[0].extract()
+        return re.sub(r'[^\w+]', '', id)
+
+    def get_square(self, node):
+        square = node.xpath('yandex:area/yandex:value/text()')[0].extract()
+        return square.replace(',', '.')
 
     def get_house_id(self, node):
         try:
